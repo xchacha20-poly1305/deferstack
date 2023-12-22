@@ -6,8 +6,6 @@
 
 # Example
 
-Require go v1.21.
-
 ```shell
 go get github.com/xchacha20-poly1305/deferstack
 ```
