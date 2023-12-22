@@ -44,13 +44,14 @@ func (d *deferstack) Run() {
 	}
 }
 
+// Clear() will remove all the funcs of your deferstack.
 func (d *deferstack) Clear() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	clear(d.funcs)
+	d.funcs = []func(){}
 }
 
-// Remove `num` final funcs.
+// Remove final funcs.
 func (d *deferstack) Remove(num int) error {
 	if num < 0 {
 		return errors.New("num less than zero")
