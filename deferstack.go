@@ -40,6 +40,9 @@ func (d *deferstack) Run() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	for i := d.Length() - 1; i >= 0; i-- {
+		if d.funcs[i] == nil {
+			continue
+		}
 		d.funcs[i]()
 	}
 }
