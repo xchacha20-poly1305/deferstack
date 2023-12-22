@@ -27,10 +27,6 @@ func (d *Deferpool) Add(a func()) {
 	d.funcs = append(d.funcs, a)
 }
 
-func (d *Deferpool) Defer(a func()) {
-	d.Add(a)
-}
-
 func (d *Deferpool) Length() int {
 	return len(d.funcs)
 }
