@@ -1,3 +1,3 @@
-module github.com/xchacha20-poly1305/deferpool
+module github.com/xchacha20-poly1305/deferstack
 
 go 1.21

@@ -1,44 +1,44 @@
-package deferpool
+package deferstack
 
 import (
 	"errors"
 	"fmt"
 )
 
-type Deferpool struct {
+type deferstack struct {
 	funcs []func()
 }
 
-func New(funcs ...func()) *Deferpool {
-	return &Deferpool{
+func New(funcs ...func()) *deferstack {
+	return &deferstack{
 		funcs: funcs,
 	}
 }
 
-func (d *Deferpool) Funcs() []func() {
+func (d *deferstack) Funcs() []func() {
 	return d.funcs
 }
 
-func (d *Deferpool) Add(a ...func()) {
+func (d *deferstack) Add(a ...func()) {
 	d.funcs = append(d.funcs, a...)
 }
 
-func (d *Deferpool) Length() int {
+func (d *deferstack) Length() int {
 	return len(d.funcs)
 }
 
-func (d *Deferpool) Run() {
+func (d *deferstack) Run() {
 	for i := d.Length() - 1; i >= 0; i-- {
 		d.funcs[i]()
 	}
 }
 
-func (d *Deferpool) Clear() {
+func (d *deferstack) Clear() {
 	clear(d.funcs)
 }
 
 // Remove the final funcs.
-func (d *Deferpool) Remove(num int) error {
+func (d *deferstack) Remove(num int) error {
 	if num < 0 {
 		return errors.New("num less than zero")
 	}
