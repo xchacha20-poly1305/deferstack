@@ -50,7 +50,7 @@ func (d *deferstack) Clear() {
 	clear(d.funcs)
 }
 
-// Remove the final funcs.
+// Remove `num` final funcs.
 func (d *deferstack) Remove(num int) error {
 	if num < 0 {
 		return errors.New("num less than zero")
@@ -60,6 +60,6 @@ func (d *deferstack) Remove(num int) error {
 	}
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	d.funcs = d.funcs[:num]
+	d.funcs = d.funcs[:num+1]
 	return nil
 }
