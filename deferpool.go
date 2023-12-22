@@ -9,11 +9,7 @@ type Deferpool struct {
 	funcs []func()
 }
 
-func New() *Deferpool {
-	return &Deferpool{}
-}
-
-func NewWithFuncs(funcs ...func()) *Deferpool {
+func New(funcs ...func()) *Deferpool {
 	return &Deferpool{
 		funcs: funcs,
 	}
@@ -23,8 +19,8 @@ func (d *Deferpool) Funcs() []func() {
 	return d.funcs
 }
 
-func (d *Deferpool) Add(a func()) {
-	d.funcs = append(d.funcs, a)
+func (d *Deferpool) Add(a ...func()) {
+	d.funcs = append(d.funcs, a...)
 }
 
 func (d *Deferpool) Length() int {
