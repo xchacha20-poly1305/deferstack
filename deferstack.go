@@ -52,8 +52,8 @@ func (d *deferstack) Run() {
 	}
 }
 
-// Clear() will remove all the funcs of your deferstack.
-func (d *deferstack) Clear() {
+// Clean() will remove all the funcs of your deferstack.
+func (d *deferstack) Clean() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.funcs = []func(){}
