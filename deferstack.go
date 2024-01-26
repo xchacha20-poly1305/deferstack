@@ -6,13 +6,32 @@ import (
 	"sync"
 )
 
+type Deferstack interface {
+	// Add used to add new functions.
+	Add(...func())
+
+	// Funcs show functions in stack.
+	Funcs() []func()
+
+	// Length get the length of stack.
+	Length() int
+
+	// Run starts running.
+	Run()
+
+	// Clean will remove all the functions.
+	Clean()
+}
+
 type deferstack struct {
 	funcs []func()
 
 	mu sync.Mutex
 }
 
-func New(funcs ...func()) *deferstack {
+var _ Deferstack = (*deferstack)(nil)
+
+func New(funcs ...func()) Deferstack {
 	return &deferstack{
 		funcs: funcs,
 	}
@@ -36,7 +55,7 @@ func (d *deferstack) Length() int {
 	return d.length()
 }
 
-// Use it in internal. It doesn't has lock!
+// Use it in internal. It doesn't have lock!
 func (d *deferstack) length() int {
 	return len(d.funcs)
 }
@@ -52,14 +71,14 @@ func (d *deferstack) Run() {
 	}
 }
 
-// Clean() will remove all the funcs of your deferstack.
+// Clean will remove all the funcs of deferstack.
 func (d *deferstack) Clean() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.funcs = []func(){}
 }
 
-// Remove final funcs.
+// Remove final functions.
 func (d *deferstack) Remove(num int) error {
 	if num < 0 {
 		return errors.New("num less than zero")
