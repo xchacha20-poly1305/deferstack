@@ -13,6 +13,9 @@ type Deferstack interface {
 	// Funcs show functions in stack.
 	Funcs() []func()
 
+	// FuncPtr return the pointer of functions
+	FuncsPtr() *[]func()
+
 	// Length get the length of stack.
 	Length() int
 
@@ -41,6 +44,10 @@ func (d *deferstack) Funcs() []func() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.funcs
+}
+
+func (d *deferstack) FuncsPtr() *[]func() {
+	return &d.funcs
 }
 
 func (d *deferstack) Add(a ...func()) {
