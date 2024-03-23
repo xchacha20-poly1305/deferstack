@@ -1,8 +1,6 @@
 package deferstack
 
 import (
-	"errors"
-	"fmt"
 	"sync"
 )
 
@@ -83,18 +81,4 @@ func (d *deferstack) Clean() {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.funcs = []func(){}
-}
-
-// Remove final functions.
-func (d *deferstack) Remove(num int) error {
-	if num < 0 {
-		return errors.New("num less than zero")
-	}
-	if num > d.length() {
-		return fmt.Errorf("the length is %d, but got %d", d.length(), num)
-	}
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	d.funcs = d.funcs[:num+1]
-	return nil
 }
