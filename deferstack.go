@@ -8,7 +8,7 @@ type Deferstack interface {
 	// Add used to add new functions.
 	Add(...func())
 
-	// Funcs show functions in stack.
+	// Funcs show functions in stack. When editing it, don't forget your lock.
 	Funcs() []func()
 
 	// Length get the length of stack.
@@ -22,9 +22,9 @@ type Deferstack interface {
 }
 
 type deferstack struct {
-	funcs []func()
+	sync.Mutex
 
-	mu sync.Mutex
+	funcs []func()
 }
 
 var _ Deferstack = (*deferstack)(nil)
@@ -36,20 +36,20 @@ func New(funcs ...func()) Deferstack {
 }
 
 func (d *deferstack) Funcs() []func() {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+	d.Lock()
+	defer d.Unlock()
 	return d.funcs
 }
 
 func (d *deferstack) Add(a ...func()) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+	d.Lock()
+	defer d.Unlock()
 	d.funcs = append(d.funcs, a...)
 }
 
 func (d *deferstack) Length() int {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+	d.Lock()
+	defer d.Unlock()
 	return d.length()
 }
 
@@ -59,8 +59,8 @@ func (d *deferstack) length() int {
 }
 
 func (d *deferstack) Run() {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+	d.Lock()
+	defer d.Unlock()
 	for i := d.length() - 1; i >= 0; i-- {
 		if d.funcs[i] == nil {
 			continue
@@ -71,7 +71,7 @@ func (d *deferstack) Run() {
 
 // Clean will remove all the funcs of deferstack.
 func (d *deferstack) Clean() {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+	d.Lock()
+	defer d.Unlock()
 	d.funcs = []func(){}
 }
